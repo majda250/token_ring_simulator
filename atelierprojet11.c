@@ -22,5 +22,19 @@ void token_ring_simulation(int num_nodes) {
             sleep(1); // Simule le temps de transmission
             printf("Node %d has finished transmitting.\n", current_token);
         }
+     else {
+            printf("Node %d has no data to transmit. Passing the token...\n", current_token);
+        }
+
+        // Passer le jeton au prochain nœud
+        current_token = (current_token + 1) % num_nodes;
+        sleep(1); // Pause pour observer la simulation
     }
+}
+
+int main() {
+    int num_nodes;
+
+    // Initialiser le générateur de nombres aléatoires
+    srand(time(NULL));
 }
