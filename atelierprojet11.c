@@ -37,4 +37,18 @@ int main() {
 
     // Initialiser le générateur de nombres aléatoires
     srand(time(NULL));
+        // Demander le nombre de nœuds
+    printf("Enter the number of nodes in the Token Ring: ");
+    scanf("%d", &num_nodes);
+
+    if (num_nodes <= 0) {
+        printf("The number of nodes must be greater than 0.\n");
+        return 1;
+    }
+
+    // Lancer la simulation
+    printf("\nStarting the Token Ring simulation with %d nodes...\n", num_nodes);
+    token_ring_simulation(num_nodes);
+
+    return 0;
 }
