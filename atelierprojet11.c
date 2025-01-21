@@ -1,54 +1,25 @@
 #include <stdio.h>
+#include <unistd.h>
 #include <stdlib.h>
-#include <unistd.h> // Pour la fonction sleep()
-#include <stdbool.h> // Pour utiliser le type bool
-#include <time.h> // Pour générer des nombres aléatoires
+#include <string.h>
 
-
-bool has_data_to_transmit() {
-    return rand() % 2; // Retourne true (1) ou false (0) de manière aléatoire
-}
-
-// Fonction pour simuler le réseau Token Ring
-void token_ring_simulation(int num_nodes) {
-    int current_token = 0;
-
-    while (1) {
-        printf("\nNode %d has the token.\n", current_token);
-
-        // Vérifier si le nœud a des données à transmettre
-        if (has_data_to_transmit()) {
-            printf("Node %d is transmitting data...\n", current_token);
-            sleep(1); // Simule le temps de transmission
-            printf("Node %d has finished transmitting.\n", current_token);
-        }
-     else {
-            printf("Node %d has no data to transmit. Passing the token...\n", current_token);
-        }
-
-        // Passer le jeton au prochain nœud
-        current_token = (current_token + 1) % num_nodes;
-        sleep(1); // Pause pour observer la simulation
-    }
-}
-
+#define NOMBRE_NOEUDS 5  
+#define JETON_INITIAL 1 
 int main() {
-    int num_nodes;
-
-    // Initialiser le générateur de nombres aléatoires
-    srand(time(NULL));
-        // Demander le nombre de nœuds
-    printf("Enter the number of nodes in the Token Ring: ");
-    scanf("%d", &num_nodes);
-
-    if (num_nodes <= 0) {
-        printf("The number of nodes must be greater than 0.\n");
-        return 1;
+    int canaux[NOMBRE_NOEUDS][2]; 
+    int jeton = JETON_INITIAL;  
+    pid_t pid;
+    for (int i = 0; i < NOMBRE_NOEUDS; i++) {
+        if (pipe(canaux[i]) == -1) {
+            perror("Erreur lors de la création du canal");
+            exit(1);
+        }
     }
-
-    // Lancer la simulation
-    printf("\nStarting the Token Ring simulation with %d nodes...\n", num_nodes);
-    token_ring_simulation(num_nodes);
-
-    return 0;
-}
+    for (int i = 0; i < NOMBRE_NOEUDS; i++) {
+        pid = fork();
+        if (pid < 0) {
+            perror("Erreur lors du fork");
+            exit(1);
+        }
+        if (pid == 0) {  
+            int jeton_recu;
