@@ -4,7 +4,7 @@
 #include <stdbool.h> // Pour utiliser le type bool
 #include <time.h> // Pour générer des nombres aléatoires
 
-// Fonction pour simuler une transmission aléatoire de données
+
 bool has_data_to_transmit() {
     return rand() % 2; // Retourne true (1) ou false (0) de manière aléatoire
 }
